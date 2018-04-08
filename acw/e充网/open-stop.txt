@@ -1,0 +1,16 @@
+public 154 open
+101.69.243.94:10088/html/operateLabel
+POST
+info ={"session_id": 1903, "pile_code": "110102101997879001", "inter_no": 1, "action": 1, "user_id": 1, "voltage": 1, "elect": 5, "time": 1480508124   }
+app_id = WS2JSoKNo1EM9Qorx8S3HuR8
+sig = iQdXhMiD6YoSrv2gz89ovy7K9wM=
+
+
+
+
+public 154 stop
+101.69.243.94:10088/html/operateLabel
+POST
+info ={"session_id": 1903, "pile_code": "110102101997879001", "inter_no": 1, "action": 2, "user_id": 1, "voltage": 1, "elect": 5, "time": 1480508124   }
+app_id = WS2JSoKNo1EM9Qorx8S3HuR8
+sig = K8B+937l5Xr0fPhgqF3uB6smJ90=

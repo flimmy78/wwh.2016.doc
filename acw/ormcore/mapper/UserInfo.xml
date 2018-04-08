@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.epcentre.dao.TblUserInfoDao">
+	
+	<resultMap id="userInfResultMap" type="TblUserInfo">
+		<id property="id" column="user_id" />
+		<result property="password" column="user_password" />
+		<result property="phone" column="user_account" />
+		 <result property="status" column="user_status" />
+        <result property="level" column="user_leval" />
+        
+		<result property="name" column="norm_name" />
+		<result property="iccard" column="norm_driving_licence" />
+		<result property="vehicleNumber" column="norm_vehicle_number" />
+		<result property="balance" column="norm_account_balance" />
+        <result property="deviceid" column="norm_device_id" />
+         <result property="invitePhone" column="norm_invitePhone" />
+	</resultMap>
+	
+	<resultMap id="findResultMap"  type="java.util.HashMap" extends="userInfResultMap"></resultMap>
+
+
+	<!-- 根据电桩编码获取电桩费率信息-->
+	<select id="findUserInfoByPhone" parameterType="String" resultMap="userInfResultMap">
+		select e.user_id,e.user_password,e.user_account,e.user_leval,e.user_status,r.norm_name,r.norm_driving_licence,r.norm_vehicle_number,
+		r.norm_account_balance,r.norm_invitePhone 
+		from tbl_user e left join tbl_user_normal  r on r.user_id = e.user_id
+	   where
+	    e.user_account=#{account} 
+	</select>
+	
+	<select id="findUserInfoById" parameterType="int" resultMap="userInfResultMap">
+		select e.user_id,e.user_password,e.user_account,e.user_leval,e.user_status,r.norm_name,r.norm_driving_licence,r.norm_vehicle_number,
+		r.norm_account_balance,r.norm_device_id,r.norm_invitePhone 
+		from tbl_user e left join tbl_user_normal  r on r.user_id = e.user_id
+	   where
+	    e.user_id=#{accountId} 
+	</select>
+	
+
+	<update id="updateBalance" parameterType="TblUserInfo">
+	   update tbl_user_normal set
+			norm_account_balance=#{balance}
+	   where 
+	    user_id=#{id}
+	</update>
+	
+	<update id="addCost" parameterType="TblUserInfo">
+	   update tbl_user_normal set
+			norm_account_balance = norm_account_balance +#{balance}
+	   where 
+	    user_id=#{id}
+	</update>
+	<update id="subCost" parameterType="TblUserInfo">
+	   update tbl_user_normal set
+			norm_account_balance=norm_account_balance-#{balance}
+	   where 
+	    user_id=#{id}
+	</update>
+
+</mapper> 

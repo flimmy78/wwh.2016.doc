@@ -1,0 +1,82 @@
+#!/bin/bash
+# chkconfig: 2345 45 19 
+# description:epgate service
+# source function library. 
+. /etc/rc.d/init.d/functions 
+# check that networking is up. 
+[ "${NETWORKING}" = "no" ] && exit 0 
+# check for epgate script 
+
+CATALINA_HOME=/root/epserver
+EPGATE_START=$CATALINA_HOME/gate/start.sh
+
+epgate_pid() {
+        echo `ps -ef | grep epGate | grep -v grep | tr -s " "|cut -d" " -f2`
+}
+
+if [ ! -f $CATALINA_HOME/gate/gameStart.sh ]; then
+        echo -e "\e[00;32m epgate not valilable...\e[00m" 
+        exit 
+fi 
+
+start(){ 
+		pid=$(epgate_pid)
+	if [ -n "$pid" ];then
+		echo -e "\e[00;31m epgate is already running (pid: $pid)\e[00m"
+	else
+		echo -e "\e[00;32m Starting epgate ...\e[00m"
+		cd $CATALINA_HOME/gate/
+                daemon $CATALINA_HOME/gate/sstart.sh
+        echo 
+        touch /var/lock/subsys/epgate 
+	fi
+} 
+
+stop(){
+		pid=$(epgate_pid) 
+		ps ax --width=1000 | grep "[e]pGate" | awk '{printf $1 " "}' \
+ | wc | awk '{print $2}' > /tmp/epgate_process_count.txt 
+		read line < /tmp/epgate_process_count.txt
+        if [ $line -gt 0 ]; then 
+                daemon kill -9 $pid
+		echo -e "\e[00;32m epgate is shutdown ...\e[00m"
+                rm -f /var/lock/subsys/epgate
+        else 
+                echo -e "\e[00;31m epgate is stopped \e[00m" 
+        fi 
+        
+        
+} 
+
+status(){ 
+        ps ax --width=1000 | grep "[e]pGate" | awk '{printf $1 " "}' \
+ | wc | awk '{print $2}' > /tmp/epgate_process_count.txt 
+        read line < /tmp/epgate_process_count.txt 
+        if [ $line -gt 0 ]; then 
+                echo -en "\e[00;31m epgate ( pid \e[00m" 
+                echo -en "\e[00;31m `ps ax --width=1000 | grep "[e]pGate" | awk '{printf $1 " "}'`\e[00m"
+                echo -en "\e[00;31m ) is running...\e[00m" 
+                echo 
+        else 
+                echo -e "\e[00;31m epgate is stopped \e[00m" 
+        fi 
+} 
+case "$1" in 
+        start) 
+                start ;; 
+        stop) 
+                stop ;; 
+        restart) 
+		status 
+		stop 
+		status
+		start 
+		status ;;
+        status) 
+                status ;; 
+        *) 
+                echo "Usage: epgate {start|stop|restart|status}" 
+                exit 1 
+esac 
+exit 0 
+

@@ -1,0 +1,72 @@
+流量和指令统计设计
+
+流量统计：
+FlowStatistics.java（
+sendFlow：发送字节数
+,receiveFlow：接收字节数
+,totalFlow：总字节数
+,cycle：采样周期
+,userMarker：使用者标记
+,statisticsTime：统计截止时间）绑定到PhoneClient，EpGateNetConnect
+
+流量统计输出类：FlowStat.java
+FlowStatistics flowMax：单个通道的流量数新高记录
+FlowStatistics flowTotal：所有通道的流量数合计记录
+
+输出：总字节数，采样周期，使用者标记（限单个通道）,统计截止时间
+
+流量统计:
+手机所有通道的合计:
+{发送字节数 = 3
+接收字节数 = 2
+总字节数 = 2
+统计周期 = 2
+统计截止时间 = 2016-11-16 17:06:51}
+
+手机单个通道的最大值：
+{发送字节数 = 3
+接收字节数 = 2
+总字节数 = 2
+统计周期 = 2
+使用者标记 = 17
+创新高时间 = 2016-11-16 17:06:51}
+
+
+电桩所有通道的合计:
+{发送字节数 = 3
+接收字节数 = 2
+总字节数 = 2
+统计周期 = 2
+统计截止时间 = 2016-11-16 17:06:51}
+
+电桩单个通道的最大值：
+{发送字节数 = 3
+接收字节数 = 2
+总字节数 = 2
+统计周期 = 2
+使用者标记 = 17
+统计截止时间 = 2016-11-16 17:06:51}
+
+
+
+指令统计：
+InstructStatistics.java（
+instructMap：指令明细集合
+,instructCount：指令数
+,cycle：采样周期
+,userMarker：使用者标记
+,statisticsTime：统计截止时间）
+
+指令明细：
+InstructDetail.java（
+version：版本号
+,instructCmd：指令编号
+,instructCount：指令数）
+
+指令统计输出类：InstructStat.java
+InstructStatistics instructMax：单个通道的指令数新高记录
+InstructStatistics instructTotal：所有通道的指令数合计记录
+
+输出：总指令数，采样周期，使用者标记（限单个通道）,统计截止时间
+StatService
+	private static InstructStat phoneInstruct = new InstructStat();

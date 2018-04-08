@@ -1,0 +1,87 @@
+CommonServer单例
+
+自定义时间
+实现IEventCallBack接口
+
+调用步骤：
+1.创建用户服务单例
+CommonServer commonServer = CommonServer.getInstance();
+2.实现IEventCallBack接口（自封装充电流程实现逻辑）
+public class thirdService implements IEventCallBack
+3.调用用户服务初始化（参数：组织编号，用户网关标识，接口实现服务）
+commonServer.init(int orgNo, String gateId, IEventCallBack evt)
+
+充电流程接口函数
+1.startChange（开始充电）
+参数：epCode（电桩编号）
+      epGunNo（枪编号）
+      accountId（用户ID）
+      account（用户账号）
+      bespNo（预约编号）（默认传""）
+      startChargeStyle（发起充电方式）（默认传1-二维码充电）
+      pkUserCard（卡ID）（默认传0）
+      frozenAmt（冻结金额）
+      payMode（支付方式）（默认传1-预冻结）
+      orgNo（组织编号）（默认传1000-万马）
+      fromSource（来源）（默认传2-手机）
+      actionIdentity（消费服务器标识）（默认传用户账号）
+2.stopChange（开始充电）
+参数：epCode（电桩编号）
+      epGunNo（枪编号）
+      userId（用户ID）
+      source（来源）（默认传99）
+      apiClientIp（消费服务器标识）（默认传用户账号）
+3.startChangeBack（开始充电反馈）
+返回参数：epCode（电桩编号）
+        epGunNo（枪编号）
+        accountId（用户ID）
+        ret（成功标识：1-成功，0-失败）
+        errorCode（错误码：失败时有效，成功时填0）
+4.stopChangeBack（停止充电反馈）
+返回参数：epCode（电桩编号）
+        epGunNo（枪编号）
+        accountId（用户ID）
+        ret（成功标识：1-成功，0-失败）
+        errorCode（错误码：失败时有效，成功时填0）
+5.chargeReal（实时数据）
+返回参数：epCode（电桩编号）
+        epGunNo（枪编号）
+        accountId（用户ID）
+        extraData（实时数据）
+6.consumeRecord（消费记录）
+返回参数：epCode（电桩编号）
+        epGunNo（枪编号）
+        accountId（用户ID）
+        extraData（消费记录）
+
+实时数据解析：
+Map<String, Object> chargingInfoMap = Map<String, Object> extraData;
+所有参数类型都是int
+chargingInfoMap.get("workStatus")：工作状态（0：离线 1：故障 2：待机 3：工作 4：欠压故障 5 过压故障 6 过电流故障）
+chargingInfoMap.get("totalTime")：累计充电时间
+chargingInfoMap.get("outVol")：充电输出电压(精确到小数点后1位,倍数10)
+chargingInfoMap.get("outCurrent")：充电输出电流(精确到小数点后两位,倍数100)
+chargingInfoMap.get("chargeMeterNum")/10：已充电度数(精确到小数点后两位)
+chargingInfoMap.get("rateInfo")：当前费率
+chargingInfoMap.get("fronzeAmt")：预充金额(精确到小数点后两位,倍数100)
+chargingInfoMap.get("chargeAmt")：已充金额(精确到小数点后两位,倍数100)
+chargingInfoMap.get("soc")：电池容量(电池百分比)
+chargingInfoMap.get("deviceStatus")：附属设备状态
+chargingInfoMap.get("warns")：告警状态
+
+消费记录解析：
+Map<String, Object> consumeRecordMap = Map<String, Object> extraData;
+(String) consumeRecordMap.get("orderid")：订单号
+(long) consumeRecordMap.get("st")：开始时间
+(long) consumeRecordMap.get("et")：结束时间
+(int) consumeRecordMap.get("totalMeterNum")：总电量(精确到小数点后三位,倍数1000)
+(int) consumeRecordMap.get("totalAmt")：总充电金额(精确到小数点后两位,倍数100)
+(int) consumeRecordMap.get("serviceAmt")：服务费(精确到小数点后两位,倍数100)
+(int) consumeRecordMap.get("pkEpId")
+
+
+Iterator iter = extraData.entrySet().iterator();
+while (iter.hasNext()) {
+	String name = entry.getKey();		--workStatus
+	String value = entry.getValue();	--value
+}

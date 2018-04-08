@@ -1,0 +1,6 @@
+address=8001
+xms=1g
+xmx=1g
+xmn=256m
+permsize=512m
+maxsize=1G

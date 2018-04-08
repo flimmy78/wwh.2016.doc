@@ -1,0 +1,15 @@
+	
+	@SuppressWarnings("rawtypes")
+	private void printLog(){
+		Iterator iter = VersionService.getMapVersion().entrySet().iterator();
+		while (iter.hasNext()) {
+			Map.Entry entry = (Map.Entry) iter.next();
+			ProtocolVersion protocolVersion = (ProtocolVersion) entry.getValue();
+			if (null != protocolVersion) {
+				logger.info("protocal version count:{}", protocolVersion.toString());
+			}
+		}
+	}
+
+		EpGateNetConnect epGateClient = CacheService.getEpGateByCh(channel);
+		if (epGateClient != null && epGateClient.isComm()) VersionService.offProtocol(phoneClient.getVersion());

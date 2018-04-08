@@ -1,0 +1,82 @@
+#!/bin/bash
+# chkconfig: 2345 45 19 
+# description:depgate service
+# source function library. 
+. /etc/rc.d/init.d/functions 
+# check that networking is up. 
+[ "${NETWORKING}" = "no" ] && exit 0 
+# check for depgate script 
+
+CATALINA_HOME=/usr/local/depserver/dEpGate
+DEPGATE_START=$CATALINA_HOME/start.sh
+
+depgate_pid() {
+        echo `ps -ef | grep dEpGate | grep -v grep | tr -s " "|cut -d" " -f2`
+}
+
+if [ ! -f $CATALINA_HOME/start.sh ]; then
+        echo -e "\e[00;32m depgate not valilable...\e[00m" 
+        exit 
+fi 
+
+start(){ 
+		pid=$(depgate_pid)
+	if [ -n "$pid" ];then
+		echo -e "\e[00;31m depgate is already running (pid: $pid)\e[00m"
+	else
+		echo -e "\e[00;32m Starting depgate ...\e[00m"
+		cd $CATALINA_HOME/
+                daemon $CATALINA_HOME/sstart.sh
+        echo 
+        touch /var/lock/subsys/depgate 
+	fi
+} 
+
+stop(){
+		pid=$(depgate_pid) 
+		ps ax --width=1000 | grep "[d]EpGate" | awk '{printf $1 " "}' \
+ | wc | awk '{print $2}' > /tmp/depgate_process_count.txt 
+		read line < /tmp/depgate_process_count.txt
+        if [ $line -gt 0 ]; then 
+                daemon kill -9 $pid
+		echo -e "\e[00;32m depgate is shutdown ...\e[00m"
+                rm -f /var/lock/subsys/depgate
+        else 
+                echo -e "\e[00;31m depgate is stopped \e[00m" 
+        fi 
+        
+        
+} 
+
+status(){ 
+        ps ax --width=1000 | grep "[d]EpGate" | awk '{printf $1 " "}' \
+ | wc | awk '{print $2}' > /tmp/depgate_process_count.txt 
+        read line < /tmp/depgate_process_count.txt 
+        if [ $line -gt 0 ]; then 
+                echo -en "\e[00;31m depgate ( pid \e[00m" 
+                echo -en "\e[00;31m `ps ax --width=1000 | grep "[d]EpGate" | awk '{printf $1 " "}'`\e[00m"
+                echo -en "\e[00;31m ) is running...\e[00m" 
+                echo 
+        else 
+                echo -e "\e[00;31m depgate is stopped \e[00m" 
+        fi 
+} 
+case "$1" in 
+        start) 
+                start ;; 
+        stop) 
+                stop ;; 
+        restart) 
+		status 
+		stop 
+		status
+		start 
+		status ;;
+        status) 
+                status ;; 
+        *) 
+                echo "Usage: depgate {start|stop|restart|status}" 
+                exit 1 
+esac 
+exit 0 
+

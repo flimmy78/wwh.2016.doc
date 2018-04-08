@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.epcentre.dao.ChargeCardDao">
+
+	<resultMap id="userCardmap" type="TblChargeCard">
+	
+		<id property="pk_UserCard" column="pk_UserCard" />
+		<result property="uc_InternalCardNumber" column="uc_InternalCardNumber" />
+		<result property="uc_ExternalCardNumber" column="uc_ExternalCardNumber" />
+		<result property="uc_Balance" column="uc_Balance" />
+		<result property="uc_CompanyNumber" column="uc_CompanyNumber" />
+		<result property="uc_UserId" column="uc_UserId" />
+		<result property="uc_Status" column="uc_Status" />
+		<result property="uc_pay_mode" column="uc_pay_mode" />
+		<result property="uc_Createdate" column="uc_Createdate" />
+		<result property="uc_Updatedate" column="uc_Updatedate" />
+		
+	</resultMap>
+	
+	<resultMap id="findResultMap"  type="java.util.HashMap" extends="userCardmap"></resultMap>
+	
+	<select id="findCard"  parameterType="String" resultMap="userCardmap">
+	 select 
+		pk_UserCard,uc_InternalCardNumber,uc_ExternalCardNumber,uc_Balance,uc_CompanyNumber,uc_UserId,uc_Status,uc_pay_mode
+	   from tbl_usercard
+	   where 
+	    uc_InternalCardNumber=#{uc_InternalCardNumber}
+	</select>
+	
+	<select id="findCardById"  parameterType="int" resultMap="userCardmap">
+	 select 
+		pk_UserCard,uc_InternalCardNumber,uc_ExternalCardNumber,uc_Balance,uc_CompanyNumber,uc_UserId,uc_Status,uc_pay_mode
+	   from tbl_usercard
+	   where 
+	    pk_UserCard=#{Id}
+	</select>
+	
+	<insert id="insertCard"  parameterType="TblChargeCard" useGeneratedKeys="true" keyProperty="pk_UserCard">
+	 
+	 insert into tbl_usercard (
+		uc_InternalCardNumber,
+		uc_ExternalCardNumber,
+		uc_Balance,
+		uc_CompanyNumber,
+		uc_UserId,
+		uc_Status,
+		uc_pay_mode
+	   )
+	   values (
+		#{uc_InternalCardNumber},
+		#{uc_ExternalCardNumber},
+		#{uc_Balance},
+		#{uc_CompanyNumber},
+		#{uc_UserId},
+		#{uc_Status},
+		#{uc_pay_mode});
+	 
+	</insert>
+	
+</mapper> 

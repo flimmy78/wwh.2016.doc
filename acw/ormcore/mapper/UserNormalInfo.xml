@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.epcentre.dao.TblUserNormalDao">
+	
+	<resultMap id="normalInfResultMap" type="TblUserNormal">
+		<id property="id" column="user_id" />
+		
+		<result property="iccard" column="norm_driving_licence" />
+		<result property="vehicleNumber" column="norm_vehicle_number" />
+        <result property="deviceid" column="norm_device_id" />
+         <result property="invitePhone" column="norm_invitePhone" />
+         <result property="balance" column="norm_account_balance" />
+	</resultMap>
+	
+	<resultMap id="findResultMap"  type="java.util.HashMap" extends="normalInfResultMap"></resultMap>
+
+	<select id="findUserInfoById" parameterType="int" resultMap="normalInfResultMap">
+		select user_id,
+		norm_driving_licence,
+		norm_vehicle_number,
+		norm_account_balance,
+		norm_device_id,
+		norm_invitePhone 
+		from tbl_user_normal  where user_id=#{accountId} 
+	</select>
+	
+</mapper> 

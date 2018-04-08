@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">      
+	  <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.apusic.jocky.JockyAction">
+         <menu
+               label="Jocky"
+               id="org.apusic.jocky.JockyAction.group"
+               path="additions">
+            <separator
+                  name="group0">
+            </separator>
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <filter
+               name="projectNature"
+               value="org.eclipse.jdt.core.javanature">
+         </filter>
+         <action
+               label="Jocky Now!"
+               class="org.apusic.jocky.actions.JockyNowAction"
+               menubarPath="org.apusic.jocky.JockyAction.group/group0"
+               enablesFor="1"
+               id="org.apusic.jocky.actions.JockyNowAction">
+         </action>                  
+         <action
+               label="Jocky Settings"
+               class="org.apusic.jocky.actions.JockySettingAction"
+               menubarPath="org.apusic.jocky.JockyAction.group/group1"
+               enablesFor="1"
+               id="org.apusic.jocky.actions.JockySettingAction">
+         </action>         
+      </objectContribution>
+    </extension>
+    
+    <!-- Jocky Project Property Page: must have two copies of declare, one for IProject, 
+         the other is for IJavaProject, the eclipse is so stupid-->	  
+    <extension point="org.eclipse.ui.propertyPages">
+        <page 
+            id="org.apusic.jocky.JockyProjectPropertyPage" 
+            name="Jocky Settings" 
+            objectClass="org.eclipse.core.resources.IProject" 
+            class="org.apusic.jocky.property.JockyProjectPropertyPage"> 
+			<filter
+			      name="nature"
+			      value="org.eclipse.jdt.core.javanature"> 
+			</filter> 
+        </page>        
+        <page 
+            id="org.apusic.jocky.JockyProjectPropertyPage" 
+            name="Jocky Settings" 
+            objectClass="org.eclipse.jdt.core.IJavaProject" 
+            class="org.apusic.jocky.property.JockyProjectPropertyPage"> 
+			<filter
+			      name="nature"
+			      value="org.eclipse.jdt.core.javanature"> 
+			</filter> 
+        </page>   
+		<page 
+            id="org.apusic.jocky.JockyProjectPropertyPage" 
+            name="Jocky Settings" 
+            objectClass="com.apusic.studio.treenode.component.EARNode" 
+            class="org.apusic.jocky.property.JockyProjectPropertyPage"> 
+			<filter 
+			      name="nature" 
+			      value="org.eclipse.jdt.core.javanature"> 
+			</filter> 
+        </page>                   
+    </extension>
+
+   <extension point="org.eclipse.ant.core.antTasks">
+      <antTask name="jocky" 
+               library="jocky-ant.jar"
+               class="org.apusic.jocky.ant.JockyTask" 
+               eclipseRuntime="false"/>
+   </extension> 
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="jocky-ant.jar">
+      </extraClasspathEntry>
+   </extension>
+   
+   <extension point="org.eclipse.help.toc">
+       <toc file="book.xml" primary="true" />
+   </extension>
+</plugin>

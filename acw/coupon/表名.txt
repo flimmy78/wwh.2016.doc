@@ -1,0 +1,12 @@
+tbl_activity 活动表
+tbl_activityschedule 活动附表
+tbl_couponvariety 优惠券品种表
+tbl_coupon 优惠券表
+
+ALTER TABLE tbl_chargingorder ADD COLUMN `chOr_CouponMoney` DECIMAL (8, 2) NOT NULL DEFAULT '0.00' COMMENT '优惠券抵扣金额';
+
+
+ALTER TABLE tbl_chargingorder ADD COLUMN `pk_Coupon` INT (11) NOT NULL DEFAULT '0' COMMENT '优惠码主键';
+
+
+ALTER TABLE tbl_purchasehistory MODIFY COLUMN `puHi_Type` INT (11) NOT NULL COMMENT '消费类型 1-充电消费 2-预约消费 3-购物消费 4-充值 5-发票邮费 6-优惠券抵扣';
